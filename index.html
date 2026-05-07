@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>오버워치 내전 팀 구성기</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2128;
+      --border: #30363d;
+      --accent: #f99e1a;
+      --accent2: #3b9ddd;
+      --tank: #4fc3f7;
+      --dps: #ef5350;
+      --support: #66bb6a;
+      --text: #e6edf3;
+      --text2: #8b949e;
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', 'Noto Sans KR', sans-serif;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 0 20px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      color: var(--text2);
+      margin-top: 6px;
+      font-size: 0.9rem;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    /* ─── 플레이어 입력 카드 ─── */
+    .add-player-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+
+    .add-player-card h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--accent);
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .input-group label {
+      font-size: 0.75rem;
+      color: var(--text2);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="text"], select {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 7px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus, select:focus {
+      border-color: var(--accent);
+    }
+
+    input[type="text"] { width: 180px; }
+
+    select { cursor: pointer; }
+
+    .role-select option { background: var(--surface2); }
+
+    .btn {
+      padding: 9px 20px;
+      border: none;
+      border-radius: 7px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-add {
+      background: var(--accent);
+      color: #000;
+    }
+    .btn-add:hover { background: #ffb340; transform: translateY(-1px); }
+
+    .btn-balance {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      font-size: 1rem;
+      padding: 12px 32px;
+    }
+    .btn-balance:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-balance:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    .btn-clear {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text2);
+      font-size: 0.8rem;
+      padding: 7px 14px;
+    }
+    .btn-clear:hover { border-color: #ef5350; color: #ef5350; }
+
+    .btn-shuffle {
+      background: transparent;
+      border: 1px solid var(--accent2);
+      color: var(--accent2);
+      font-size: 0.8rem;
+      padding: 7px 14px;
+    }
+    .btn-shuffle:hover { background: var(--accent2); color: #fff; }
+
+    /* ─── 플레이어 목록 ─── */
+    .player-list-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .section-header h2 {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .player-count {
+      font-size: 0.8rem;
+      color: var(--text2);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .player-count span {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .player-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+    }
+
+    .player-chip {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      transition: border-color 0.2s;
+    }
+
+    .player-chip:hover { border-color: var(--accent); }
+
+    .chip-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .role-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .role-icon.tank { background: rgba(79,195,247,0.15); color: var(--tank); }
+    .role-icon.dps  { background: rgba(239,83,80,0.15);  color: var(--dps); }
+    .role-icon.support { background: rgba(102,187,106,0.15); color: var(--support); }
+
+    .chip-info { min-width: 0; }
+
+    .chip-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chip-meta {
+      font-size: 0.72rem;
+      color: var(--text2);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 1px;
+    }
+
+    .tier-badge {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    .delete-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text2);
+      font-size: 16px;
+      line-height: 1;
+      padding: 2px 4px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      transition: color 0.15s;
+    }
+    .delete-btn:hover { color: #ef5350; }
+
+    /* 빈 상태 */
+    .empty-state {
+      text-align: center;
+      padding: 40px 0;
+      color: var(--text2);
+      font-size: 0.9rem;
+    }
+
+    /* ─── 액션 바 ─── */
+    .action-bar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    /* ─── 팀 결과 ─── */
+    .result-section {
+      display: none;
+      margin-bottom: 32px;
+    }
+
+    .result-section.show { display: block; }
+
+    .result-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .result-header h2 {
+      font-size: 1.3rem;
+      font-weight: 800;
+    }
+
+    .result-header .score-diff {
+      margin-top: 6px;
+      font-size: 0.85rem;
+      color: var(--text2);
+    }
+
+    .result-header .score-diff b {
+      color: var(--accent);
+    }
+
+    .teams-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .teams-grid { grid-template-columns: 1fr; }
+      input[type="text"] { width: 140px; }
+    }
+
+    .team-card {
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .team-card-header {
+      padding: 14px 18px;
+      font-weight: 800;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .team1 .team-card-header { background: linear-gradient(135deg, #1a3a5c, #0d2137); border-bottom: 2px solid #3b9ddd; }
+    .team2 .team-card-header { background: linear-gradient(135deg, #3a1a1a, #200d0d); border-bottom: 2px solid #ef5350; }
+
+    .team1-label { color: #3b9ddd; }
+    .team2-label { color: #ef5350; }
+
+    .team-score {
+      font-size: 0.85rem;
+      color: var(--text2);
+      font-weight: 400;
+    }
+
+    .team-score b { color: var(--text); }
+
+    .team-members { padding: 12px; }
+
+    .role-group { margin-bottom: 10px; }
+
+    .role-group:last-child { margin-bottom: 0; }
+
+    .role-group-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .role-group-label.tank { color: var(--tank); }
+    .role-group-label.dps  { color: var(--dps); }
+    .role-group-label.support { color: var(--support); }
+
+    .member-row {
+      background: var(--surface2);
+      border-radius: 7px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+
+    .member-row:last-child { margin-bottom: 0; }
+
+    .member-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .member-tier {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    /* ─── 티어 색상 ─── */
+    .tier-bronze   { background: rgba(140,90,60,0.25);  color: #cd7f32; }
+    .tier-silver   { background: rgba(160,160,180,0.2); color: #b0b8c1; }
+    .tier-gold     { background: rgba(255,200,0,0.2);   color: #ffd700; }
+    .tier-platinum { background: rgba(0,200,200,0.15);  color: #00c8c8; }
+    .tier-diamond  { background: rgba(100,150,255,0.2); color: #6eb5ff; }
+    .tier-master   { background: rgba(200,100,255,0.2); color: #c864ff; }
+    .tier-grandmaster { background: rgba(255,80,80,0.2); color: #ff6060; }
+    .tier-champion { background: rgba(255,165,0,0.25);  color: #ff9900; }
+
+    /* 알림 토스트 */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 0.88rem;
+      color: var(--text);
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 100;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ─── 티어 점수 표 ─── */
+    .tier-table-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 24px;
+      margin-bottom: 24px;
+    }
+
+    .tier-table-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .tier-table-toggle h2 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text2);
+    }
+
+    .tier-table-toggle .toggle-arrow {
+      font-size: 0.8rem;
+      color: var(--text2);
+      transition: transform 0.2s;
+    }
+
+    .tier-table-toggle.open .toggle-arrow { transform: rotate(180deg); }
+
+    .tier-table-body {
+      display: none;
+      margin-top: 14px;
+    }
+
+    .tier-table-body.open { display: block; }
+
+    .tier-rows {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 6px;
+    }
+
+    .tier-row-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface2);
+      border-radius: 6px;
+      padding: 6px 12px;
+    }
+
+    .tier-row-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+    }
+
+    .tier-row-score {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text2);
+    }
+
+    .tier-row-score span {
+      color: var(--accent);
+    }
+
+    .warning-msg {
+      background: rgba(255,160,0,0.1);
+      border: 1px solid rgba(255,160,0,0.3);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.85rem;
+      color: #ffb830;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>⚔️ 오버워치 내전 팀 구성기</h1>
+    <p>탱커 1 · 딜러 2 · 힐러 2 — 10명을 입력하면 밸런스 있는 팀을 자동으로 구성해드립니다</p>
+  </header>
+
+  <div class="container">
+
+    <!-- 티어 점수 표 -->
+    <div class="tier-table-section">
+      <div class="tier-table-toggle" id="tierToggle" onclick="toggleTierTable()">
+        <h2>📊 티어별 점수 보기</h2>
+        <span class="toggle-arrow">▼</span>
+      </div>
+      <div class="tier-table-body" id="tierTableBody">
+        <div class="tier-rows" id="tierRows"></div>
+      </div>
+    </div>
+
+    <!-- 플레이어 추가 -->
+    <div class="add-player-card">
+      <h2>플레이어 추가</h2>
+      <div class="input-row">
+        <div class="input-group">
+          <label>닉네임</label>
+          <input type="text" id="nameInput" placeholder="BattleTag" maxlength="30" />
+        </div>
+        <div class="input-group">
+          <label>포지션</label>
+          <select id="roleSelect">
+            <option value="tank">🛡️ 탱커</option>
+            <option value="dps">⚔️ 딜러</option>
+            <option value="support">💚 힐러</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>티어</label>
+          <select id="tierSelect">
+            <option value="bronze5">브론즈 5</option>
+            <option value="bronze4">브론즈 4</option>
+            <option value="bronze3">브론즈 3</option>
+            <option value="bronze2">브론즈 2</option>
+            <option value="bronze1">브론즈 1</option>
+            <option value="silver5">실버 5</option>
+            <option value="silver4">실버 4</option>
+            <option value="silver3">실버 3</option>
+            <option value="silver2">실버 2</option>
+            <option value="silver1">실버 1</option>
+            <option value="gold5">골드 5</option>
+            <option value="gold4">골드 4</option>
+            <option value="gold3">골드 3</option>
+            <option value="gold2">골드 2</option>
+            <option value="gold1">골드 1</option>
+            <option value="platinum5">플래티넘 5</option>
+            <option value="platinum4">플래티넘 4</option>
+            <option value="platinum3">플래티넘 3</option>
+            <option value="platinum2">플래티넘 2</option>
+            <option value="platinum1">플래티넘 1</option>
+            <option value="diamond5">다이아몬드 5</option>
+            <option value="diamond4">다이아몬드 4</option>
+            <option value="diamond3">다이아몬드 3</option>
+            <option value="diamond2">다이아몬드 2</option>
+            <option value="diamond1">다이아몬드 1</option>
+            <option value="master5">마스터 5</option>
+            <option value="master4">마스터 4</option>
+            <option value="master3">마스터 3</option>
+            <option value="master2">마스터 2</option>
+            <option value="master1">마스터 1</option>
+            <option value="grandmaster5">그랜드마스터 5</option>
+            <option value="grandmaster4">그랜드마스터 4</option>
+            <option value="grandmaster3">그랜드마스터 3</option>
+            <option value="grandmaster2">그랜드마스터 2</option>
+            <option value="grandmaster1">그랜드마스터 1</option>
+            <option value="champion">챔피언</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>&nbsp;</label>
+          <button class="btn btn-add" onclick="addPlayer()">+ 추가</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 플레이어 목록 -->
+    <div class="player-list-section">
+      <div class="section-header">
+        <h2>참가자 목록</h2>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <div class="player-count" id="countDisplay">
+            <span id="tankCount">탱 0</span> /
+            <span id="dpsCount">딜 0</span> /
+            <span id="supCount">힐 0</span>
+          </div>
+        </div>
+      </div>
+      <div id="playerGrid" class="player-grid">
+        <div class="empty-state" id="emptyState">아직 추가된 플레이어가 없습니다.<br/>위에서 플레이어를 추가해주세요.</div>
+      </div>
+    </div>
+
+    <!-- 액션 바 -->
+    <div class="action-bar">
+      <button class="btn btn-clear" onclick="clearAll()">전체 초기화</button>
+      <button class="btn btn-balance" id="balanceBtn" onclick="balanceTeams()" disabled>⚖️ 팀 구성하기</button>
+      <button class="btn btn-shuffle" id="shuffleBtn" onclick="shuffleTeams()" disabled>🔀 다시 구성</button>
+    </div>
+
+    <!-- 결과 -->
+    <div class="result-section" id="resultSection">
+      <div class="result-header">
+        <h2>🏆 팀 구성 결과</h2>
+        <div class="score-diff" id="scoreDiff"></div>
+      </div>
+      <div id="warningMsg"></div>
+      <div class="teams-grid" id="teamsGrid"></div>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ─── 티어 점수 매핑 (숫자가 클수록 강함) ───
+    const TIER_SCORE = {
+      bronze5: 1,  bronze4: 2,  bronze3: 3,  bronze2: 4,  bronze1: 5,
+      silver5: 6,  silver4: 7,  silver3: 8,  silver2: 9,  silver1: 10,
+      gold5: 11,   gold4: 12,   gold3: 13,   gold2: 14,   gold1: 15,
+      platinum5: 16, platinum4: 17, platinum3: 18, platinum2: 19, platinum1: 20,
+      diamond5: 21, diamond4: 22, diamond3: 23, diamond2: 24, diamond1: 25,
+      master5: 26, master4: 27, master3: 28, master2: 29, master1: 30,
+      grandmaster5: 31, grandmaster4: 32, grandmaster3: 33, grandmaster2: 34, grandmaster1: 35,
+      champion: 40
+    };
+
+    const TIER_DISPLAY = {
+      bronze5: '브5', bronze4: '브4', bronze3: '브3', bronze2: '브2', bronze1: '브1',
+      silver5: '실5', silver4: '실4', silver3: '실3', silver2: '실2', silver1: '실1',
+      gold5: '골5', gold4: '골4', gold3: '골3', gold2: '골2', gold1: '골1',
+      platinum5: '플5', platinum4: '플4', platinum3: '플3', platinum2: '플2', platinum1: '플1',
+      diamond5: '다5', diamond4: '다4', diamond3: '다3', diamond2: '다2', diamond1: '다1',
+      master5: '마5', master4: '마4', master3: '마3', master2: '마2', master1: '마1',
+      grandmaster5: 'GM5', grandmaster4: 'GM4', grandmaster3: 'GM3', grandmaster2: 'GM2', grandmaster1: 'GM1',
+      champion: 'CHAMP'
+    };
+
+    const TIER_FULL = {
+      bronze5: '브론즈 5', bronze4: '브론즈 4', bronze3: '브론즈 3', bronze2: '브론즈 2', bronze1: '브론즈 1',
+      silver5: '실버 5', silver4: '실버 4', silver3: '실버 3', silver2: '실버 2', silver1: '실버 1',
+      gold5: '골드 5', gold4: '골드 4', gold3: '골드 3', gold2: '골드 2', gold1: '골드 1',
+      platinum5: '플래티넘 5', platinum4: '플래티넘 4', platinum3: '플래티넘 3', platinum2: '플래티넘 2', platinum1: '플래티넘 1',
+      diamond5: '다이아 5', diamond4: '다이아 4', diamond3: '다이아 3', diamond2: '다이아 2', diamond1: '다이아 1',
+      master5: '마스터 5', master4: '마스터 4', master3: '마스터 3', master2: '마스터 2', master1: '마스터 1',
+      grandmaster5: 'GM 5', grandmaster4: 'GM 4', grandmaster3: 'GM 3', grandmaster2: 'GM 2', grandmaster1: 'GM 1',
+      champion: '챔피언'
+    };
+
+    const TIER_CLASS = {
+      bronze5: 'bronze', bronze4: 'bronze', bronze3: 'bronze', bronze2: 'bronze', bronze1: 'bronze',
+      silver5: 'silver', silver4: 'silver', silver3: 'silver', silver2: 'silver', silver1: 'silver',
+      gold5: 'gold', gold4: 'gold', gold3: 'gold', gold2: 'gold', gold1: 'gold',
+      platinum5: 'platinum', platinum4: 'platinum', platinum3: 'platinum', platinum2: 'platinum', platinum1: 'platinum',
+      diamond5: 'diamond', diamond4: 'diamond', diamond3: 'diamond', diamond2: 'diamond', diamond1: 'diamond',
+      master5: 'master', master4: 'master', master3: 'master', master2: 'master', master1: 'master',
+      grandmaster5: 'grandmaster', grandmaster4: 'grandmaster', grandmaster3: 'grandmaster', grandmaster2: 'grandmaster', grandmaster1: 'grandmaster',
+      champion: 'champion'
+    };
+
+    const ROLE_ICON = { tank: '🛡️', dps: '⚔️', support: '💚' };
+    const ROLE_LABEL = { tank: '탱커', dps: '딜러', support: '힐러' };
+
+    let players = [];
+    let lastTeams = null;
+
+    // Enter 키로 추가
+    document.getElementById('nameInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') addPlayer();
+    });
+
+    function addPlayer() {
+      const nameEl = document.getElementById('nameInput');
+      const name = nameEl.value.trim();
+      const role = document.getElementById('roleSelect').value;
+      const tier = document.getElementById('tierSelect').value;
+
+      if (!name) { showToast('닉네임을 입력해주세요'); nameEl.focus(); return; }
+      if (players.find(p => p.name.toLowerCase() === name.toLowerCase())) {
+        showToast('이미 추가된 닉네임입니다'); nameEl.focus(); return;
+      }
+
+      players.push({ id: Date.now(), name, role, tier });
+      nameEl.value = '';
+      nameEl.focus();
+      renderPlayers();
+      updateButtons();
+    }
+
+    function removePlayer(id) {
+      players = players.filter(p => p.id !== id);
+      renderPlayers();
+      updateButtons();
+      // 결과 숨기기
+      document.getElementById('resultSection').classList.remove('show');
+    }
+
+    function clearAll() {
+      if (players.length === 0) return;
+      players = [];
+      lastTeams = null;
+      renderPlayers();
+      updateButtons();
+      document.getElementById('resultSection').classList.remove('show');
+      showToast('전체 초기화 완료');
+    }
+
+    function renderPlayers() {
+      const grid = document.getElementById('playerGrid');
+      const empty = document.getElementById('emptyState');
+      const tanks = players.filter(p => p.role === 'tank');
+      const dpsList = players.filter(p => p.role === 'dps');
+      const sups = players.filter(p => p.role === 'support');
+
+      document.getElementById('tankCount').textContent = `탱 ${tanks.length}`;
+      document.getElementById('dpsCount').textContent = `딜 ${dpsList.length}`;
+      document.getElementById('supCount').textContent = `힐 ${sups.length}`;
+
+      if (players.length === 0) {
+        grid.innerHTML = '';
+        grid.appendChild(empty);
+        return;
+      }
+
+      grid.innerHTML = players.map(p => `
+        <div class="player-chip">
+          <div class="chip-left">
+            <div class="role-icon ${p.role}">${ROLE_ICON[p.role]}</div>
+            <div class="chip-info">
+              <div class="chip-name">${escHtml(p.name)}</div>
+              <div class="chip-meta">
+                <span class="tier-badge tier-${TIER_CLASS[p.tier]}">${TIER_DISPLAY[p.tier]}</span>
+                <span>${ROLE_LABEL[p.role]}</span>
+              </div>
+            </div>
+          </div>
+          <button class="delete-btn" onclick="removePlayer(${p.id})" title="제거">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function updateButtons() {
+      const tanks = players.filter(p => p.role === 'tank').length;
+      const dps   = players.filter(p => p.role === 'dps').length;
+      const sups  = players.filter(p => p.role === 'support').length;
+      const ready = tanks >= 2 && dps >= 4 && sups >= 4;
+      document.getElementById('balanceBtn').disabled = !ready;
+      document.getElementById('shuffleBtn').disabled = !lastTeams;
+    }
+
+    // ─── 팀 밸런싱 알고리즘 ───
+    // 각 포지션별로 짝을 맞춰서 팀 스코어 차이를 최소화
+    function balanceTeams() {
+      const tanks = [...players.filter(p => p.role === 'tank')];
+      const dpsList = [...players.filter(p => p.role === 'dps')];
+      const sups  = [...players.filter(p => p.role === 'support')];
+
+      const warnings = [];
+      if (tanks.length < 2)   warnings.push(`탱커가 ${tanks.length}명입니다 (최소 2명 필요)`);
+      if (dpsList.length < 4) warnings.push(`딜러가 ${dpsList.length}명입니다 (최소 4명 필요)`);
+      if (sups.length < 4)    warnings.push(`힐러가 ${sups.length}명입니다 (최소 4명 필요)`);
+      if (warnings.length > 0) { showToast(warnings[0]); return; }
+
+      // 정확히 2탱/4딜/4힐 만 사용 (초과시 랜덤 제외)
+      const usedTanks = pickRandom(tanks, 2);
+      const usedDps   = pickRandom(dpsList, 4);
+      const usedSups  = pickRandom(sups, 4);
+
+      lastTeams = assignBestSplit(usedTanks, usedDps, usedSups);
+      renderResult(lastTeams);
+      updateButtons();
+      document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function shuffleTeams() {
+      if (!lastTeams) return;
+      // 사용된 플레이어 기억 후 재배분
+      const all = [...lastTeams.team1, ...lastTeams.team2];
+      const tanks = all.filter(p => p.role === 'tank');
+      const dpsList = all.filter(p => p.role === 'dps');
+      const sups  = all.filter(p => p.role === 'support');
+      lastTeams = assignBestSplit(tanks, dpsList, sups);
+      renderResult(lastTeams);
+      document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function assignBestSplit(tanks, dpsList, sups) {
+      // 각 포지션의 2가지 분배 중 최적 조합 탐색
+      const tankSplits = getSplits(tanks, 1, 1);
+      const dpsSplits  = getSplits(dpsList, 2, 2);
+      const supSplits  = getSplits(sups, 2, 2);
+
+      let bestDiff = Infinity;
+      let bestTeams = null;
+
+      for (const ts of tankSplits) {
+        for (const ds of dpsSplits) {
+          for (const ss of supSplits) {
+            const t1 = [...ts[0], ...ds[0], ...ss[0]];
+            const t2 = [...ts[1], ...ds[1], ...ss[1]];
+            const diff = Math.abs(teamScore(t1) - teamScore(t2));
+            if (diff < bestDiff) {
+              bestDiff = diff;
+              bestTeams = { team1: t1, team2: t2 };
+            }
+          }
+        }
+      }
+      return bestTeams;
+    }
+
+    // 배열을 a개/b개로 나누는 모든 경우 반환
+    function getSplits(arr, a, b) {
+      const total = a + b;
+      const pool = arr.slice(0, total);
+      const indices = combinations(pool.length, a);
+      return indices.map(idxSet => {
+        const first  = idxSet.map(i => pool[i]);
+        const second = pool.filter((_, i) => !idxSet.includes(i));
+        return [first, second];
+      });
+    }
+
+    function combinations(n, k) {
+      const result = [];
+      const combo = [];
+      function helper(start) {
+        if (combo.length === k) { result.push([...combo]); return; }
+        for (let i = start; i < n; i++) {
+          combo.push(i);
+          helper(i + 1);
+          combo.pop();
+        }
+      }
+      helper(0);
+      return result;
+    }
+
+    function teamScore(members) {
+      return members.reduce((sum, p) => sum + TIER_SCORE[p.tier], 0);
+    }
+
+    function pickRandom(arr, n) {
+      const shuffled = [...arr].sort(() => Math.random() - 0.5);
+      return shuffled.slice(0, n);
+    }
+
+    function renderResult(teams) {
+      const { team1, team2 } = teams;
+      const s1 = teamScore(team1);
+      const s2 = teamScore(team2);
+      const diff = Math.abs(s1 - s2);
+
+      document.getElementById('scoreDiff').innerHTML =
+        `팀1 점수: <b>${s1}</b> &nbsp;·&nbsp; 팀2 점수: <b>${s2}</b> &nbsp;·&nbsp; 점수 차: <b>${diff}</b>`;
+
+      const warnEl = document.getElementById('warningMsg');
+      warnEl.innerHTML = '';
+      if (diff === 0) {
+        // no warning
+      } else if (diff <= 3) {
+        warnEl.innerHTML = `<div class="warning-msg">⚖️ 점수 차가 ${diff}로 매우 균형 잡혔습니다!</div>`;
+      } else if (diff > 10) {
+        warnEl.innerHTML = `<div class="warning-msg">⚠️ 점수 차가 ${diff}로 다소 불균형할 수 있습니다. 🔀 다시 구성을 눌러보세요.</div>`;
+      }
+
+      document.getElementById('teamsGrid').innerHTML = renderTeamCard(team1, 1, s1) + renderTeamCard(team2, 2, s2);
+      document.getElementById('resultSection').classList.add('show');
+    }
+
+    function renderTeamCard(members, num, score) {
+      const label = num === 1 ? 'team1' : 'team2';
+      const nameLabel = num === 1 ? '<span class="team1-label">팀 1</span>' : '<span class="team2-label">팀 2</span>';
+      const tanks = members.filter(p => p.role === 'tank');
+      const dps   = members.filter(p => p.role === 'dps');
+      const sups  = members.filter(p => p.role === 'support');
+
+      const renderGroup = (role, list) => `
+        <div class="role-group">
+          <div class="role-group-label ${role}">${ROLE_ICON[role]} ${ROLE_LABEL[role]}</div>
+          ${list.map(p => `
+            <div class="member-row">
+              <span class="member-name">${escHtml(p.name)}</span>
+              <span class="member-tier tier-${TIER_CLASS[p.tier]}">${TIER_FULL[p.tier]}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+
+      return `
+        <div class="team-card ${label}">
+          <div class="team-card-header">
+            ${nameLabel}
+            <span class="team-score">총점 <b>${score}</b></span>
+          </div>
+          <div class="team-members">
+            ${renderGroup('tank', tanks)}
+            ${renderGroup('dps', dps)}
+            ${renderGroup('support', sups)}
+          </div>
+        </div>
+      `;
+    }
+
+    function escHtml(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    // ─── 티어 점수 표 ───
+    const TIER_TABLE_DATA = [
+      { key: 'bronze5',      label: '브론즈 5',      cls: 'bronze' },
+      { key: 'bronze4',      label: '브론즈 4',      cls: 'bronze' },
+      { key: 'bronze3',      label: '브론즈 3',      cls: 'bronze' },
+      { key: 'bronze2',      label: '브론즈 2',      cls: 'bronze' },
+      { key: 'bronze1',      label: '브론즈 1',      cls: 'bronze' },
+      { key: 'silver5',      label: '실버 5',        cls: 'silver' },
+      { key: 'silver4',      label: '실버 4',        cls: 'silver' },
+      { key: 'silver3',      label: '실버 3',        cls: 'silver' },
+      { key: 'silver2',      label: '실버 2',        cls: 'silver' },
+      { key: 'silver1',      label: '실버 1',        cls: 'silver' },
+      { key: 'gold5',        label: '골드 5',        cls: 'gold' },
+      { key: 'gold4',        label: '골드 4',        cls: 'gold' },
+      { key: 'gold3',        label: '골드 3',        cls: 'gold' },
+      { key: 'gold2',        label: '골드 2',        cls: 'gold' },
+      { key: 'gold1',        label: '골드 1',        cls: 'gold' },
+      { key: 'platinum5',    label: '플래티넘 5',    cls: 'platinum' },
+      { key: 'platinum4',    label: '플래티넘 4',    cls: 'platinum' },
+      { key: 'platinum3',    label: '플래티넘 3',    cls: 'platinum' },
+      { key: 'platinum2',    label: '플래티넘 2',    cls: 'platinum' },
+      { key: 'platinum1',    label: '플래티넘 1',    cls: 'platinum' },
+      { key: 'diamond5',     label: '다이아몬드 5',  cls: 'diamond' },
+      { key: 'diamond4',     label: '다이아몬드 4',  cls: 'diamond' },
+      { key: 'diamond3',     label: '다이아몬드 3',  cls: 'diamond' },
+      { key: 'diamond2',     label: '다이아몬드 2',  cls: 'diamond' },
+      { key: 'diamond1',     label: '다이아몬드 1',  cls: 'diamond' },
+      { key: 'master5',      label: '마스터 5',      cls: 'master' },
+      { key: 'master4',      label: '마스터 4',      cls: 'master' },
+      { key: 'master3',      label: '마스터 3',      cls: 'master' },
+      { key: 'master2',      label: '마스터 2',      cls: 'master' },
+      { key: 'master1',      label: '마스터 1',      cls: 'master' },
+      { key: 'grandmaster5', label: '그랜드마스터 5',cls: 'grandmaster' },
+      { key: 'grandmaster4', label: '그랜드마스터 4',cls: 'grandmaster' },
+      { key: 'grandmaster3', label: '그랜드마스터 3',cls: 'grandmaster' },
+      { key: 'grandmaster2', label: '그랜드마스터 2',cls: 'grandmaster' },
+      { key: 'grandmaster1', label: '그랜드마스터 1',cls: 'grandmaster' },
+      { key: 'champion',     label: '챔피언',        cls: 'champion' },
+    ];
+
+    function renderTierTable() {
+      document.getElementById('tierRows').innerHTML = TIER_TABLE_DATA.map(t => `
+        <div class="tier-row-item">
+          <div class="tier-row-left">
+            <span class="tier-badge tier-${t.cls}">${t.label}</span>
+          </div>
+          <div class="tier-row-score">점수 <span>${TIER_SCORE[t.key]}</span></div>
+        </div>
+      `).join('');
+    }
+
+    function toggleTierTable() {
+      const toggle = document.getElementById('tierToggle');
+      const body   = document.getElementById('tierTableBody');
+      toggle.classList.toggle('open');
+      body.classList.toggle('open');
+    }
+
+    // 초기 렌더
+    renderTierTable();
+    renderPlayers();
+    updateButtons();
+  </script>
+</body>
+</html>
