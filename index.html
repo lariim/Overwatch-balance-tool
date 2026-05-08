@@ -391,6 +391,7 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 5px;
+      cursor: pointer;
     }
 
     .member-row:last-child { margin-bottom: 0; }
@@ -405,6 +406,11 @@
       font-weight: 700;
       padding: 2px 8px;
       border-radius: 4px;
+    }
+
+    .member-row.selected {
+      outline: 2px solid var(--accent);
+      background: rgba(249, 158, 26, 0.15);
     }
 
     /* ─── 티어 색상 ─── */
@@ -665,6 +671,7 @@
 
     let players = [];
     let lastTeams = null;
+    let selectedSwapPlayer = null;
 
     // Enter 키로 추가
     document.getElementById('nameInput').addEventListener('keydown', e => {
@@ -768,6 +775,7 @@
       const usedDps   = pickRandom(dpsList, 4);
       const usedSups  = pickRandom(sups, 4);
 
+      selectedSwapPlayer = null;
       lastTeams = assignBestSplit(usedTanks, usedDps, usedSups);
       renderResult(lastTeams);
       updateButtons();
@@ -781,6 +789,7 @@
       const tanks = all.filter(p => p.role === 'tank');
       const dpsList = all.filter(p => p.role === 'dps');
       const sups  = all.filter(p => p.role === 'support');
+      selectedSwapPlayer = null;
       lastTeams = assignBestSplit(tanks, dpsList, sups);
       renderResult(lastTeams);
       document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -881,7 +890,11 @@
         <div class="role-group">
           <div class="role-group-label ${role}">${ROLE_ICON[role]} ${ROLE_LABEL[role]}</div>
           ${list.map(p => `
-            <div class="member-row">
+            <div 
+              class="member-row ${selectedSwapPlayer && selectedSwapPlayer.id === p.id ? 'selected' : ''}"
+              onclick="selectPlayerForSwap(${p.id})"
+              title="클릭해서 다른 선수와 자리 바꾸기"
+            >
               <span class="member-name">${escHtml(p.name)}</span>
               <span class="member-tier tier-${TIER_CLASS[p.tier]}">${TIER_FULL[p.tier]}</span>
             </div>
@@ -903,7 +916,64 @@
         </div>
       `;
     }
-
+    function selectPlayerForSwap(playerId) {
+      if (!lastTeams) return;
+    
+      const allMembers = [...lastTeams.team1, ...lastTeams.team2];
+      const clickedPlayer = allMembers.find(p => p.id === playerId);
+    
+      if (!clickedPlayer) return;
+    
+      // 첫 번째 선수 선택
+      if (!selectedSwapPlayer) {
+        selectedSwapPlayer = clickedPlayer;
+        renderResult(lastTeams);
+        showToast(`${clickedPlayer.name} 선택됨 - 바꿀 선수를 클릭하세요`);
+        return;
+      }
+    
+      // 같은 선수 다시 클릭하면 선택 해제
+      if (selectedSwapPlayer.id === clickedPlayer.id) {
+        selectedSwapPlayer = null;
+        renderResult(lastTeams);
+        showToast('선택 해제');
+        return;
+      }
+    
+      // 두 선수 위치 바꾸기
+      swapPlayers(selectedSwapPlayer.id, clickedPlayer.id);
+    
+      const firstName = selectedSwapPlayer.name;
+      const secondName = clickedPlayer.name;
+    
+      selectedSwapPlayer = null;
+      renderResult(lastTeams);
+      showToast(`${firstName} ↔ ${secondName} 교체 완료`);
+    }
+    
+    function swapPlayers(id1, id2) {
+      const team1 = lastTeams.team1;
+      const team2 = lastTeams.team2;
+    
+      const findPlayerLocation = id => {
+        let index = team1.findIndex(p => p.id === id);
+        if (index !== -1) return { team: team1, index };
+    
+        index = team2.findIndex(p => p.id === id);
+        if (index !== -1) return { team: team2, index };
+    
+        return null;
+      };
+    
+      const loc1 = findPlayerLocation(id1);
+      const loc2 = findPlayerLocation(id2);
+    
+      if (!loc1 || !loc2) return;
+    
+      const temp = loc1.team[loc1.index];
+      loc1.team[loc1.index] = loc2.team[loc2.index];
+      loc2.team[loc2.index] = temp;
+    }
     function escHtml(s) {
       return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
