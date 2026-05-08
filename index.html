@@ -559,41 +559,13 @@
         <div class="input-group">
           <label>티어</label>
           <select id="tierSelect">
-            <option value="bronze5">브론즈 5</option>
-            <option value="bronze4">브론즈 4</option>
-            <option value="bronze3">브론즈 3</option>
-            <option value="bronze2">브론즈 2</option>
-            <option value="bronze1">브론즈 1</option>
-            <option value="silver5">실버 5</option>
-            <option value="silver4">실버 4</option>
-            <option value="silver3">실버 3</option>
-            <option value="silver2">실버 2</option>
-            <option value="silver1">실버 1</option>
-            <option value="gold5">골드 5</option>
-            <option value="gold4">골드 4</option>
-            <option value="gold3">골드 3</option>
-            <option value="gold2">골드 2</option>
-            <option value="gold1">골드 1</option>
-            <option value="platinum5">플래티넘 5</option>
-            <option value="platinum4">플래티넘 4</option>
-            <option value="platinum3">플래티넘 3</option>
-            <option value="platinum2">플래티넘 2</option>
-            <option value="platinum1">플래티넘 1</option>
-            <option value="diamond5">다이아몬드 5</option>
-            <option value="diamond4">다이아몬드 4</option>
-            <option value="diamond3">다이아몬드 3</option>
-            <option value="diamond2">다이아몬드 2</option>
-            <option value="diamond1">다이아몬드 1</option>
-            <option value="master5">마스터 5</option>
-            <option value="master4">마스터 4</option>
-            <option value="master3">마스터 3</option>
-            <option value="master2">마스터 2</option>
-            <option value="master1">마스터 1</option>
-            <option value="grandmaster5">그랜드마스터 5</option>
-            <option value="grandmaster4">그랜드마스터 4</option>
-            <option value="grandmaster3">그랜드마스터 3</option>
-            <option value="grandmaster2">그랜드마스터 2</option>
-            <option value="grandmaster1">그랜드마스터 1</option>
+            <option value="bronze5">브론즈</option>
+            <option value="silver5">실버</option>
+            <option value="gold5">골드</option>
+            <option value="platinum5">플래티넘</option>
+            <option value="diamond5">다이아몬드</option>
+            <option value="master5">마스터</option>
+            <option value="grandmaster5">그랜드마스터</option>
             <option value="champion">챔피언</option>
           </select>
         </div>
@@ -645,46 +617,46 @@
   <script>
     // ─── 티어 점수 매핑 (숫자가 클수록 강함) ───
     const TIER_SCORE = {
-      bronze5: 1,  bronze4: 2,  bronze3: 3,  bronze2: 4,  bronze1: 5,
-      silver5: 6,  silver4: 7,  silver3: 8,  silver2: 9,  silver1: 10,
-      gold5: 11,   gold4: 12,   gold3: 13,   gold2: 14,   gold1: 15,
-      platinum5: 16, platinum4: 17, platinum3: 18, platinum2: 19, platinum1: 20,
-      diamond5: 21, diamond4: 22, diamond3: 23, diamond2: 24, diamond1: 25,
-      master5: 26, master4: 27, master3: 28, master2: 29, master1: 30,
-      grandmaster5: 31, grandmaster4: 32, grandmaster3: 33, grandmaster2: 34, grandmaster1: 35,
-      champion: 40
+      bronze: 1,
+      silver: 2,
+      gold: 3,
+      platinum: 4,
+      diamond: 5,
+      master: 7,
+      grandmaster: 9,
+      champion: 11
     };
 
     const TIER_DISPLAY = {
-      bronze5: '브5', bronze4: '브4', bronze3: '브3', bronze2: '브2', bronze1: '브1',
-      silver5: '실5', silver4: '실4', silver3: '실3', silver2: '실2', silver1: '실1',
-      gold5: '골5', gold4: '골4', gold3: '골3', gold2: '골2', gold1: '골1',
-      platinum5: '플5', platinum4: '플4', platinum3: '플3', platinum2: '플2', platinum1: '플1',
-      diamond5: '다5', diamond4: '다4', diamond3: '다3', diamond2: '다2', diamond1: '다1',
-      master5: '마5', master4: '마4', master3: '마3', master2: '마2', master1: '마1',
-      grandmaster5: 'GM5', grandmaster4: 'GM4', grandmaster3: 'GM3', grandmaster2: 'GM2', grandmaster1: 'GM1',
-      champion: 'CHAMP'
-    };
-
-    const TIER_FULL = {
-      bronze5: '브론즈 5', bronze4: '브론즈 4', bronze3: '브론즈 3', bronze2: '브론즈 2', bronze1: '브론즈 1',
-      silver5: '실버 5', silver4: '실버 4', silver3: '실버 3', silver2: '실버 2', silver1: '실버 1',
-      gold5: '골드 5', gold4: '골드 4', gold3: '골드 3', gold2: '골드 2', gold1: '골드 1',
-      platinum5: '플래티넘 5', platinum4: '플래티넘 4', platinum3: '플래티넘 3', platinum2: '플래티넘 2', platinum1: '플래티넘 1',
-      diamond5: '다이아 5', diamond4: '다이아 4', diamond3: '다이아 3', diamond2: '다이아 2', diamond1: '다이아 1',
-      master5: '마스터 5', master4: '마스터 4', master3: '마스터 3', master2: '마스터 2', master1: '마스터 1',
-      grandmaster5: 'GM 5', grandmaster4: 'GM 4', grandmaster3: 'GM 3', grandmaster2: 'GM 2', grandmaster1: 'GM 1',
+      bronze: '브론즈',
+      silver: '실버',
+      gold: '골드',
+      platinum: '플래티넘',
+      diamond: '다이아',
+      master: '마스터',
+      grandmaster: '그마',
       champion: '챔피언'
     };
 
+    const TIER_FULL = {
+      bronze: '브론즈',
+      silver: '실버',
+      gold: '골드',
+      platinum: '플래티넘',
+      diamond: '다이아몬드',
+      master: '마스터',
+      grandmaster: '그랜드마스터',
+      champion: '챔피언'
+    };  
+
     const TIER_CLASS = {
-      bronze5: 'bronze', bronze4: 'bronze', bronze3: 'bronze', bronze2: 'bronze', bronze1: 'bronze',
-      silver5: 'silver', silver4: 'silver', silver3: 'silver', silver2: 'silver', silver1: 'silver',
-      gold5: 'gold', gold4: 'gold', gold3: 'gold', gold2: 'gold', gold1: 'gold',
-      platinum5: 'platinum', platinum4: 'platinum', platinum3: 'platinum', platinum2: 'platinum', platinum1: 'platinum',
-      diamond5: 'diamond', diamond4: 'diamond', diamond3: 'diamond', diamond2: 'diamond', diamond1: 'diamond',
-      master5: 'master', master4: 'master', master3: 'master', master2: 'master', master1: 'master',
-      grandmaster5: 'grandmaster', grandmaster4: 'grandmaster', grandmaster3: 'grandmaster', grandmaster2: 'grandmaster', grandmaster1: 'grandmaster',
+      bronze: 'bronze',
+      silver: 'silver',
+      gold: 'gold',
+      platinum: 'platinum',
+      diamond: 'diamond',
+      master: 'master',
+      grandmaster: 'grandmaster',
       champion: 'champion'
     };
 
@@ -945,42 +917,14 @@
 
     // ─── 티어 점수 표 ───
     const TIER_TABLE_DATA = [
-      { key: 'bronze5',      label: '브론즈 5',      cls: 'bronze' },
-      { key: 'bronze4',      label: '브론즈 4',      cls: 'bronze' },
-      { key: 'bronze3',      label: '브론즈 3',      cls: 'bronze' },
-      { key: 'bronze2',      label: '브론즈 2',      cls: 'bronze' },
-      { key: 'bronze1',      label: '브론즈 1',      cls: 'bronze' },
-      { key: 'silver5',      label: '실버 5',        cls: 'silver' },
-      { key: 'silver4',      label: '실버 4',        cls: 'silver' },
-      { key: 'silver3',      label: '실버 3',        cls: 'silver' },
-      { key: 'silver2',      label: '실버 2',        cls: 'silver' },
-      { key: 'silver1',      label: '실버 1',        cls: 'silver' },
-      { key: 'gold5',        label: '골드 5',        cls: 'gold' },
-      { key: 'gold4',        label: '골드 4',        cls: 'gold' },
-      { key: 'gold3',        label: '골드 3',        cls: 'gold' },
-      { key: 'gold2',        label: '골드 2',        cls: 'gold' },
-      { key: 'gold1',        label: '골드 1',        cls: 'gold' },
-      { key: 'platinum5',    label: '플래티넘 5',    cls: 'platinum' },
-      { key: 'platinum4',    label: '플래티넘 4',    cls: 'platinum' },
-      { key: 'platinum3',    label: '플래티넘 3',    cls: 'platinum' },
-      { key: 'platinum2',    label: '플래티넘 2',    cls: 'platinum' },
-      { key: 'platinum1',    label: '플래티넘 1',    cls: 'platinum' },
-      { key: 'diamond5',     label: '다이아몬드 5',  cls: 'diamond' },
-      { key: 'diamond4',     label: '다이아몬드 4',  cls: 'diamond' },
-      { key: 'diamond3',     label: '다이아몬드 3',  cls: 'diamond' },
-      { key: 'diamond2',     label: '다이아몬드 2',  cls: 'diamond' },
-      { key: 'diamond1',     label: '다이아몬드 1',  cls: 'diamond' },
-      { key: 'master5',      label: '마스터 5',      cls: 'master' },
-      { key: 'master4',      label: '마스터 4',      cls: 'master' },
-      { key: 'master3',      label: '마스터 3',      cls: 'master' },
-      { key: 'master2',      label: '마스터 2',      cls: 'master' },
-      { key: 'master1',      label: '마스터 1',      cls: 'master' },
-      { key: 'grandmaster5', label: '그랜드마스터 5',cls: 'grandmaster' },
-      { key: 'grandmaster4', label: '그랜드마스터 4',cls: 'grandmaster' },
-      { key: 'grandmaster3', label: '그랜드마스터 3',cls: 'grandmaster' },
-      { key: 'grandmaster2', label: '그랜드마스터 2',cls: 'grandmaster' },
-      { key: 'grandmaster1', label: '그랜드마스터 1',cls: 'grandmaster' },
-      { key: 'champion',     label: '챔피언',        cls: 'champion' },
+      { key: 'bronze',      label: '브론즈',        cls: 'bronze' },
+      { key: 'silver',      label: '실버',          cls: 'silver' },
+      { key: 'gold',        label: '골드',          cls: 'gold' },
+      { key: 'platinum',    label: '플래티넘',      cls: 'platinum' },
+      { key: 'diamond',     label: '다이아몬드',    cls: 'diamond' },
+      { key: 'master',      label: '마스터',        cls: 'master' },
+      { key: 'grandmaster', label: '그랜드마스터',  cls: 'grandmaster' },
+      { key: 'champion',    label: '챔피언',        cls: 'champion' },
     ];
 
     function renderTierTable() {
